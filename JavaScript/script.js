@@ -1,0 +1,95 @@
+/* DARK MODE */
+
+const toggle = document.getElementById("darkToggle")
+
+toggle.onclick = () =>{
+document.body.classList.toggle("dark")
+if (document.body.classList.contains("dark")) {
+toggle.textContent = "☀️"
+} else {
+toggle.textContent = "🌙"
+}
+}
+
+/* SKILL BARS */
+
+const bars = document.querySelectorAll(".progress-bar")
+
+window.addEventListener("scroll", ()=>{
+
+bars.forEach(bar=>{
+bar.style.width = bar.dataset.progress + "%"
+})
+
+})
+
+/* COUNTER */
+
+const counters = document.querySelectorAll(".stat-number")
+
+counters.forEach(counter=>{
+
+const update = ()=>{
+
+let target = +counter.dataset.target
+let count = +counter.innerText
+
+let inc = target / 100
+
+if(count < target){
+counter.innerText = Math.ceil(count + inc)
+setTimeout(update,20)
+}
+else{
+counter.innerText = target
+}
+
+}
+
+update()
+
+})
+
+/* BACK TO TOP */
+
+const topBtn = document.getElementById("topBtn")
+
+window.onscroll = ()=>{
+
+if(window.scrollY > 300){
+topBtn.style.display = "block"
+}
+else{
+topBtn.style.display = "none"
+}
+
+}
+
+topBtn.onclick = ()=>{
+window.scrollTo({top:0,behavior:"smooth"})
+}
+
+/* RESUME DOWNLOAD FALLBACK */
+
+const resumeLink = document.getElementById("resumeDownload")
+
+if (resumeLink) {
+  resumeLink.addEventListener("click", async (event) => {
+    event.preventDefault()
+
+    try {
+      const response = await fetch(resumeLink.href)
+      const blob = await response.blob()
+      const downloadAnchor = document.createElement("a")
+      const url = window.URL.createObjectURL(blob)
+      downloadAnchor.href = url
+      downloadAnchor.download = "PaoResume.pdf"
+      document.body.appendChild(downloadAnchor)
+      downloadAnchor.click()
+      document.body.removeChild(downloadAnchor)
+      window.URL.revokeObjectURL(url)
+    } catch (error) {
+      window.location.href = resumeLink.href
+    }
+  })
+}
